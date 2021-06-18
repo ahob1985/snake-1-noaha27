@@ -1,9 +1,10 @@
 // Author:
 
+
 // Global UI Variables
 let canvasDiv;
 let canvas;
-letr textDiv;
+let textDiv;
 let textP;
 let buttonDiv;
 let resetButton;
@@ -12,7 +13,7 @@ let resetButton;
 let snake;
 let food;
 let resolution;
-let scaled Width;
+let scaledWidth;
 let scaledHeight;
 let score;
 
@@ -29,13 +30,13 @@ function setup() {
   resetButton.mousePressed(resetGame);
   resetButton.parent(buttonDiv);
   // Set the resolution to 20. Play with this later if you want.
-  resolution = 20;
+  resolution = 20; 
   // Scaled width and height are width / resolution, height / resolution
-  scaleWidth = floor(width / resolution);
+  scaledWidth = floor(width / resolution);
   scaledHeight = floor(height / resolution);
   // Set the game's framerate to 5 (or whatever you prefer)
-  framerate(5);
-  // Call resetGame() to initialize everything else.
+  frameRate(5);
+  // // Call resetGame() to initialize everything else.
   resetGame();
 }
 
@@ -44,25 +45,53 @@ function draw() {
   scale(resolution);
   background(220);
   // Check if snake is eating the food
-
+  if(snake.eat(food)) {
+    createFood();
+    score++;
+    textP.html("Score: " +score);
+  }
   // Draw the snake
   snake.update();
   snake.show();
 
   // Draw the food
-
+  noStroke();
+  fill(255, 0, 0);
+  rect(food.x, food.y, 1, 1);
   // Check for game over
-
+  if(snake.endGame()) {
+    textP.html("YOU LOSE. Final Score: " + score);
+    background(255, 0, 0);
+    noLoop();
+    buttonDiv.style("display", "block");
+  }
 }
 
 function createFood() {
-
+  let x = floor(random(scaledWidth));
+  let y = floor(random(scaledHeight));
+  food = createVector(x, y);
 }
 
 function keyPressed() {
-
+  if(keyCode === UP_ARROW && snake.yDirection === 0) {
+    snake.setDirection(0, -1);
+  } else if(keyCode === DOWN_ARROW && snake.yDirection === 0) {
+    snake.setDirection(0, 1);
+  } else if(keyCode === LEFT_ARROW && snake.xDirection === 0) {
+    snake.setDirection(-1, 0);
+  } else if(keyCode === RIGHT_ARROW && snake.xDirection === 0) {
+    snake.setDirection(1, 0);
+  }
 }
 
 function resetGame() {
-
+  // Instantiate a new Snake object
+  snake = new Snake();
+  // Create a food object
+  createFood();
+  score = 0;
+  textP.html("Score: " + score);
+  loop();
+  buttonDiv.style("display", "none");
 }

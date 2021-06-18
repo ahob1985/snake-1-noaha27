@@ -8,7 +8,7 @@ class Snake {
   }
 
   update() {
-    let hewad = this.body[this.body.length - 1].copy();
+    let head = this.body[this.body.length - 1].copy();
     this.body.shift();
     head.x += this.xDirection;
     head.y += this.yDirection;
@@ -16,15 +16,33 @@ class Snake {
   }
 
   endGame() {
-
+    let head = this.body[this.body.length -1];
+    if(head.x > scaledWidth || head.x < 0 || head.y > scaledHeight - 1 || head.y < 0) {
+      return true;
+    }
+    for(let i = 0; i < this.body.length - 1; i++){
+      let part = this.body[i];
+      if(part.x === head.x && part.y == head.y) {
+        return true;
+      }
+    }
+    return false;
   }
 
   grow() {
-
+    let head = this.body[this.body.length -1].copy();
+    this.body.push(head);
   }
 
   eat(food) {
+    let head = this.body[this.body.length -1];
+    if(head.x === food.x && head.y == food.y) {
+      this.grow();
+      return true;
+    } else {
+      return false;
 
+    }
   }
 
   show() {
